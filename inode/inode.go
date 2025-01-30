@@ -6,8 +6,11 @@ import (
 
 /*
 IndexNode - Represents an Index Node containing metadata about the file.
+Associated metadata includes its inode number (a unique identifier) for the index
+node, its size (the direct size of its metadata + the data stored in its data blocks),
+and timestamps for creation, modification, and access.
 
-Data corresponding to the file is represented as pointers to data blocks.
+Uniquely, a file's name is not stored in and inode and is only stored by its directory
 */
 type IndexNode struct {
 	inodeNum  int64
