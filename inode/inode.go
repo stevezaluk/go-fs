@@ -15,6 +15,12 @@ Associated metadata includes its inode number (a unique identifier) for the inde
 node, its size (the direct size of its metadata + the data stored in its data blocks),
 and timestamps for creation, modification, and access.
 
+In addition to these attributes, a slice of 64-bit integers is provided to serve as a pointers to disk blocks.
+We don't use pointers to actual structures in memory here to ensure that we can load an index node independently,
+of its blocks. While this is not supremely useful here (as this is all in memory, and the disk blocks need to be loaded
+anyway; not saving us any space), this would be useful if this project gets abstracted to use a UNIX file to represent
+its disk.
+
 Uniquely, a file's name is not stored in and inode and is only stored by its directory
 */
 type IndexNode struct {
@@ -26,7 +32,7 @@ type IndexNode struct {
 	modifiedTime *time.Time
 	accessTime   *time.Time
 
-	// data blocks here
+	pointers []int64
 }
 
 /*
