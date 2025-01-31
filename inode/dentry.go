@@ -11,16 +11,17 @@ as it provides us better random access (randomly accessing an element in a
 hash map is O(1) while it is O(n) in a linked list [in its worst case])
 */
 type DirectoryEntry struct {
-	inode    *IndexNode
+	inodeNum int64
 	contents map[string]int64
 }
 
 /*
-NewDirectoryEntry - A constructor for the DirectoryEntry struct. It accepts a parent
-directory for its parameter. If nil is passed into this pointer, then the directory
-entry is treated as the root directory
+NewDirectoryEntry - A constructor for the DirectoryEntry struct. It accepts two arguments
+for its parameters: inodeNum should be the inode number that represents this directory, parent
+should be the inode number of its previous directory. If -1 is passed to this parameter then
+it marks the directory with no parent
 */
-func NewDirectoryEntry(inodeNum int64, parent *DirectoryEntry) *DirectoryEntry {
+func NewDirectoryEntry(inodeNum int64, parent int64) *DirectoryEntry {
 
 	/*
 		In the case that there is no parent, then we set our previous inode number
@@ -28,15 +29,9 @@ func NewDirectoryEntry(inodeNum int64, parent *DirectoryEntry) *DirectoryEntry {
 		requiring it
 	*/
 	prevInodeNum := inodeNum
-	if parent != nil {
-		prevInodeNum = parent.inode.inodeNum
+	if parent != -1 {
+		prevInodeNum = parent
 	}
-
-	/*
-		Once again we need a free inode number returned by the inode table as this structures
-		constructor is unaware of what index numbers are free
-	*/
-	inode := NewIndexNode(inodeNum, I_DIR)
 
 	/*
 		Finally we define our contents map which represents the contents of oru directory.
@@ -44,9 +39,9 @@ func NewDirectoryEntry(inodeNum int64, parent *DirectoryEntry) *DirectoryEntry {
 		use when interacting with both the current directory and the parent directory
 	*/
 	contents := map[string]int64{
-		".":  inode.inodeNum,
+		".":  inodeNum,
 		"..": prevInodeNum,
 	}
 
-	return &DirectoryEntry{inode: inode, contents: contents}
+	return &DirectoryEntry{inodeNum: inodeNum, contents: contents}
 }
