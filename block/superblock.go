@@ -18,7 +18,9 @@ type SuperBlock struct {
 	// totalUsedInodes - The number of inodes currently in use
 	totalUsedInodes int64
 
-	// inodeTable - A map that tracks what index nodes are currently in-use
+	// inodeTable - A map that tracks what index nodes are currently in-use. This would traditionally
+	// be a pointer to the inodeTable which would be stored in its own block, however since we are using
+	// an in-memory filesystem we can just store a map here that provides this
 	inodeTable map[int64]*inode.IndexNode
 
 	// freeBlockTable - A map that tracks what blocks are currently in-use
