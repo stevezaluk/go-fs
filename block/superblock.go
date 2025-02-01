@@ -26,3 +26,11 @@ type SuperBlock struct {
 	// freeBlockTable - A map that tracks what blocks are currently in-use
 	freeBlockTable map[int64]*DataBlock
 }
+
+/*
+NewSuperBlock - Constructor for the super block. Nothing complicated happening here, just creating
+the struct and then returning a pointer to it
+*/
+func NewSuperBlock() *SuperBlock {
+	return &SuperBlock{fsType: "go-fs"}
+}
